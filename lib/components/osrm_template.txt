@@ -1,0 +1,8 @@
+#LDUB
+curl 'http://router.project-osrm.org/route/v1/driving/-122.0383183,47.6485536;-122.1812973022461,47.67253112792969?overview=full&continue_straight=false&geometries=geojson'
+
+#Redmond
+curl 'http://router.project-osrm.org/route/v1/driving/-122.0383183,47.6485536;-122.10737609863281,47.695438385009766?overview=full&continue_straight=false&geometries=geojson'
+
+#Eastlake
+curl 'http://router.project-osrm.org/route/v1/driving/-122.0383183,47.6485536;-122.0321044921875,47.61384201049805?overview=full&continue_straight=false&geometries=geojson'
