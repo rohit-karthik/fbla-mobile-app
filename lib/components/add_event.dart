@@ -93,63 +93,77 @@ class _AddEventState extends State<AddEvent> {
         if (time == null) return;
 
         TextEditingController textFieldController = TextEditingController();
-        String errorText = "Please enter a name for the event.";
-        bool error = false;
+        TextEditingController textFieldController2 = TextEditingController();
+
+        String errorText = "";
 
         showDialog(
           context: context,
           builder: (context) {
-            return Theme(
-              data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-              child: AlertDialog(
-                title: const Text('Enter an Event Name'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: textFieldController,
-                      decoration:
-                          const InputDecoration(hintText: "Event Name: "),
+            return StatefulBuilder(
+              builder: (context, setState) {
+                return Theme(
+                  data: ThemeData.light().copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: Theme.of(context).colorScheme.secondary,
                     ),
-                    if (error)
-                      Text(
-                        errorText,
-                        style: const TextStyle(color: Colors.red),
-                      )
-                  ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                  TextButton(
-                    child: const Text('OK'),
-                    onPressed: () async {
-                      if (textFieldController.text.isEmpty) {
-                        setState(() {
-                          error = true;
-                        });
-                      } else {
-                        await db.collection("events").add({
-                          "name": textFieldController.text,
-                          "date": convertDateToString(date),
-                          "time": convertTimeToString(time),
-                        });
+                  child: AlertDialog(
+                    title: const Text('Enter an Event Name'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: textFieldController,
+                          decoration:
+                              const InputDecoration(hintText: "Event Name: "),
+                        ),
+                        TextField(
+                          controller: textFieldController2,
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                              hintText: "Event Description: "),
+                        ),
+                        Text(
+                          errorText,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('CANCEL'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () async {
+                          if (textFieldController.text.isEmpty) {
+                            setState(() {
+                              errorText = "Please enter a name for the event.";
+                            });
+                          } else {
+                            setState(() {
+                              errorText = "";
+                            });
+                            await db.collection("events").add({
+                              "name": textFieldController.text,
+                              "date": convertDateToString(date),
+                              "time": convertTimeToString(time),
+                              "desc": textFieldController2.text,
+                            });
 
-                        if (!mounted) return;
-                        Navigator.pop(context);
-                      }
-                    },
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
         );

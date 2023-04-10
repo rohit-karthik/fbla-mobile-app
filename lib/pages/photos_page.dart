@@ -1,6 +1,5 @@
-import 'dart:ffi';
 import 'dart:io';
-
+import 'package:fbla_app_22/classes/photo_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
@@ -9,7 +8,7 @@ import "package:responsive_grid_list/responsive_grid_list.dart";
 import "package:image_picker/image_picker.dart";
 
 class PhotosPage extends StatefulWidget {
-  PhotosPage({Key? key}) : super(key: key);
+  const PhotosPage({Key? key}) : super(key: key);
 
   @override
   State<PhotosPage> createState() => _PhotosPageState();
@@ -19,7 +18,6 @@ class _PhotosPageState extends State<PhotosPage> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
   final List<String> _imagesList = <String>[];
-  final ImagePicker _picker = ImagePicker();
 
   String textToShow = "Awaiting photos...";
 
@@ -47,6 +45,111 @@ class _PhotosPageState extends State<PhotosPage> {
   void initState() {
     addImages();
     super.initState();
+  }
+
+  void showPhotoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        PhotoChoice? choice = PhotoChoice.camera;
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          child: AlertDialog(
+            title: const Text('Choose a photo source'),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: const Text('Camera'),
+                      leading: Radio<PhotoChoice>(
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.green[900]!),
+                        focusColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.green[900]!),
+                        value: PhotoChoice.camera,
+                        groupValue: choice,
+                        onChanged: (PhotoChoice? value) {
+                          setState(() {
+                            choice = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Gallery'),
+                      leading: Radio<PhotoChoice>(
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.green[900]!),
+                        focusColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.green[900]!),
+                        value: PhotoChoice.gallery,
+                        groupValue: choice,
+                        onChanged: (PhotoChoice? value) {
+                          setState(() {
+                            choice = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () async {
+                  if (choice == PhotoChoice.gallery) {
+                    _getFromGallery();
+                  } else {
+                    _getFromCamera();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  _getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    try {
+      storage
+          .ref("photos/${pickedFile!.name}")
+          .putFile(
+            File(pickedFile.path),
+          )
+          .then(
+        (res) {
+          res.ref.getDownloadURL().then(
+            (value) {
+              db.collection("photos").add({
+                "downloadUrl": value,
+              });
+            },
+          );
+        },
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   _getFromCamera() async {
@@ -149,7 +252,7 @@ class _PhotosPageState extends State<PhotosPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _getFromCamera();
+            showPhotoDialog();
           },
           child: const Icon(Icons.add),
         ),
@@ -179,7 +282,7 @@ class _PhotosPageState extends State<PhotosPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _getFromCamera();
+            showPhotoDialog();
           },
           child: const Icon(Icons.add),
         ),

@@ -46,7 +46,7 @@ class _CalendarPageState extends State<CalendarPage> {
                               title: doc["title"] + "<personal>",
                             ),
                           ),
-                    }
+                    },
                 },
             },
           );
@@ -125,7 +125,12 @@ class _CalendarPageState extends State<CalendarPage> {
                 // Return your widget to display as event tile.
                 return ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.secondary,
+                    primary: events[0]
+                                .title
+                                .substring(events[0].title.length - 10) ==
+                            '<personal>'
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.secondary,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(0),
@@ -200,14 +205,30 @@ class _CalendarPageState extends State<CalendarPage> {
                       primary: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  child: child!,
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: Center(
+                      child: Container(
+                        alignment: Alignment.center,
+                        color: Colors.transparent,
+                        child: child!,
+                      ),
+                    ),
+                  ),
                 );
               });
           if (time == null) return;
 
-          TimeOfDay? time2 = await showTimePicker(
+          String errorTextTime = "";
+          TimeOfDay? time2;
+
+          while (errorTextTime != "Ok") {
+            time2 = await showTimePicker(
               context: context,
-              initialTime: TimeOfDay.now(),
+              initialTime: TimeOfDay.now().replacing(
+                hour: time.hour + 1,
+                minute: time.minute,
+              ),
               builder: (BuildContext context, Widget? child) {
                 return Theme(
                   data: ThemeData.light().copyWith(
@@ -215,10 +236,47 @@ class _CalendarPageState extends State<CalendarPage> {
                       primary: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  child: child!,
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (errorTextTime == "Please enter a valid end time.")
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3.5),
+                                color: Colors.white,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32.5,
+                                vertical: 15,
+                              ),
+                              child: Text(
+                                errorTextTime,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          child!
+                        ],
+                      ),
+                    ),
+                  ),
                 );
-              });
-          if (time2 == null) return;
+              },
+            );
+            if (time2 == null) return;
+            if (time2.hour <= time.hour ||
+                (time2.hour == time.hour && time2.minute == time.minute)) {
+              errorTextTime = "Please enter a valid end time.";
+            } else {
+              errorTextTime = "Ok";
+            }
+          }
 
           TextEditingController textFieldController = TextEditingController();
           String errorText = "Please enter a name for the event.";
@@ -276,7 +334,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             "day": date.day,
                             "start": time.hour,
                             "startMin": time.minute,
-                            "end": time2.hour,
+                            "end": time2!.hour,
                             "endMin": time2.minute,
                             "email": email,
                           });

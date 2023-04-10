@@ -181,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (!mounted) return;
 
                         globals.email = _emailController.text;
+                        globals.emailType = res.data()!["accountType"];
 
                         Navigator.push(
                           context,

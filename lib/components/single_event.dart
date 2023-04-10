@@ -61,19 +61,67 @@ class SingleEvent extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(padding: EdgeInsets.all(10)),
+            const Padding(
+              padding: EdgeInsets.all(10),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  event!.name,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade800,
+                Theme(
+                  data: ThemeData(
+                    colorScheme: ColorScheme.light(
+                      primary: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Theme(
+                              data: ThemeData(
+                                colorScheme: ColorScheme.light(
+                                  primary:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                              child: AlertDialog(
+                                title: Text(event!.name),
+                                content: event!.desc != null &&
+                                        event!.desc != ""
+                                    ? Text(event!.desc!)
+                                    : const Text("No description available."),
+                                actions: [
+                                  TextButton(
+                                    child: const Text(
+                                      "CLOSE",
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    child: Text(
+                      event!.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
                 ),
-                const Padding(padding: EdgeInsets.all(5)),
+                const Padding(
+                  padding: EdgeInsets.all(2.5),
+                ),
                 Row(
                   children: [
                     const Icon(

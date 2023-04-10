@@ -3,7 +3,8 @@ import 'package:fbla_app_22/classes/absence.dart';
 import "package:flutter/material.dart";
 import "package:fbla_app_22/components/single_absence.dart";
 import "package:fbla_app_22/global_vars.dart";
-import 'package:fbla_app_22/classes/absence_or_tardy.dart';
+
+const List<String> students = <String>["John", "Mary"];
 
 class AbsencesPage extends StatefulWidget {
   const AbsencesPage({Key? key}) : super(key: key);
@@ -15,12 +16,7 @@ class AbsencesPage extends StatefulWidget {
 class _AbsencesPageState extends State<AbsencesPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  String convertChoiceToString(AbsenceChoice choice) {
-    if (choice == AbsenceChoice.absence) {
-      return "absent";
-    }
-    return "tardy";
-  }
+  String dropdownValue = students.first;
 
   String convertDateToString(DateTime? date) {
     if (date == null) {
@@ -42,7 +38,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
       filler2 = "0";
     }
 
-    return "$filler1$month/$filler2$day/$year";
+    return "$filler1$month-$filler2$day-$year";
   }
 
   DateTime getNextWeekday() {
@@ -64,9 +60,30 @@ class _AbsencesPageState extends State<AbsencesPage> {
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: <Widget>[
-          const Text(
-            "Your Students' Absences:",
-            style: TextStyle(
+          Row(
+            children: [
+              Text("Student: ", style: Theme.of(context).textTheme.titleLarge),
+              DropdownButton<String>(
+                value: dropdownValue,
+                icon: const Icon(Icons.arrow_downward),
+                elevation: 16,
+                onChanged: (String? value) {
+                  setState(() {
+                    dropdownValue = value!;
+                  });
+                },
+                items: students.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
+            ],
+          ),
+          Text(
+            "$dropdownValue's Absences:",
+            style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
@@ -92,23 +109,42 @@ class _AbsencesPageState extends State<AbsencesPage> {
                 );
               }
 
+              Map<String, dynamic> sortedMap = {};
+
+              sortedMap = Map.fromEntries(
+                  snapshot.data!.data()!.entries.toList()
+                    ..sort((e1, e2) => e1.key.compareTo(e2.key) * -1));
+
               return ListView(
                 shrinkWrap: true,
-                children: snapshot.data!.data()!.keys.map(
+                children: sortedMap.keys.map(
                   (String i) {
-                    if (i != "password") {
-                      String type = snapshot.data!.data()![i];
+                    if (i == "password" || i == "accountType") {
+                      return const SizedBox();
+                    }
+
+                    bool containsPerson = false;
+                    String studentEmail = "";
+                    for (Map<String, dynamic> j in sortedMap[i]) {
+                      if (j.values.contains(dropdownValue)) {
+                        containsPerson = true;
+                        studentEmail = j.keys.first;
+                        break;
+                      }
+                    }
+                    if (containsPerson) {
+                      String person = dropdownValue;
                       String date = i;
                       return Column(
                         children: [
                           SingleAbsence(
                             absence: Absence(
-                              type: type,
+                              type: person,
                               date: date,
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(7),
+                            student: dropdownValue,
+                            studentEmail: studentEmail,
+                            editable: true,
                           ),
                         ],
                       );
@@ -152,7 +188,6 @@ class _AbsencesPageState extends State<AbsencesPage> {
           showDialog(
             context: context,
             builder: (context) {
-              AbsenceChoice? choice = AbsenceChoice.absence;
               return Theme(
                 data: ThemeData.light().copyWith(
                   colorScheme: ColorScheme.light(
@@ -160,48 +195,9 @@ class _AbsencesPageState extends State<AbsencesPage> {
                   ),
                 ),
                 child: AlertDialog(
-                  title: const Text('Enter an Event Name'),
-                  content: StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            title: const Text('Absent'),
-                            leading: Radio<AbsenceChoice>(
-                              fillColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.green[900]!),
-                              focusColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.green[900]!),
-                              value: AbsenceChoice.absence,
-                              groupValue: choice,
-                              onChanged: (AbsenceChoice? value) {
-                                setState(() {
-                                  choice = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('Tardy'),
-                            leading: Radio<AbsenceChoice>(
-                              fillColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.green[900]!),
-                              focusColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.green[900]!),
-                              value: AbsenceChoice.tardy,
-                              groupValue: choice,
-                              onChanged: (AbsenceChoice? value) {
-                                setState(() {
-                                  choice = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                  title: const Text('Confirm your Absence'),
+                  content: Text("Are you sure you want to mark this "
+                      "date as an absence for $dropdownValue?"),
                   actions: <Widget>[
                     TextButton(
                       child: const Text('CANCEL'),
@@ -210,12 +206,22 @@ class _AbsencesPageState extends State<AbsencesPage> {
                       },
                     ),
                     TextButton(
-                      child: const Text('OK'),
+                      child: const Text('CONFIRM'),
                       onPressed: () async {
                         await db.collection("absences").doc(email).set({
-                          convertDateToString(date):
-                              convertChoiceToString(choice!),
+                          convertDateToString(date): FieldValue.arrayUnion([
+                            {
+                              "${dropdownValue.toLowerCase()}@teslastem.com":
+                                  dropdownValue
+                            }
+                          ]),
                         }, SetOptions(merge: true));
+
+                        await db
+                            .collection("absences")
+                            .doc("${dropdownValue.toLowerCase()}@teslastem.com")
+                            .set({convertDateToString(date): "absent"},
+                                SetOptions(merge: true));
 
                         if (!mounted) return;
                         Navigator.pop(context);

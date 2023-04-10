@@ -1,0 +1,4 @@
+enum PhotoChoice {
+  camera,
+  gallery,
+}

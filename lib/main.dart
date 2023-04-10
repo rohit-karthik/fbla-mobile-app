@@ -1,7 +1,10 @@
 import 'package:calendar_view/calendar_view.dart';
+import 'package:fbla_app_22/global_vars.dart';
 import 'package:fbla_app_22/pages/absences_page.dart';
 import 'package:fbla_app_22/pages/login_screen.dart';
 import 'package:fbla_app_22/pages/maps_page.dart';
+import 'package:fbla_app_22/pages/news_page.dart';
+import 'package:fbla_app_22/pages/students_absences_page.dart';
 import 'package:flutter/material.dart';
 import "package:fbla_app_22/pages/events_page.dart";
 import "package:fbla_app_22/pages/calendar_page.dart";
@@ -85,7 +88,7 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CalendarPage(),
+                        builder: (context) => const CalendarPage(),
                       ),
                     );
                   },
@@ -97,7 +100,7 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PhotosPage(),
+                        builder: (context) => const PhotosPage(),
                       ),
                     );
                   },
@@ -109,7 +112,9 @@ class MyHomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AbsencesPage(),
+                        builder: (context) => (emailType == "student")
+                            ? const StudentAbsencesPage()
+                            : const AbsencesPage(),
                       ),
                     );
                   },
@@ -129,7 +134,14 @@ class MyHomePage extends StatelessWidget {
                 SinglePage(
                   name: "News",
                   icon: Icons.newspaper,
-                  builder: () {},
+                  builder: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NewsPage(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

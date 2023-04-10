@@ -1,7 +1,6 @@
-import 'package:fbla_app_22/classes/event.dart';
 import 'package:fbla_app_22/components/add_event.dart';
+import 'package:fbla_app_22/components/past_and_future_events.dart';
 import "package:flutter/material.dart";
-import "../components/single_event.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:fbla_app_22/global_vars.dart";
 
@@ -68,56 +67,35 @@ class _EventsPageState extends State<EventsPage> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
-        children: <Widget>[
-          const Text(
+        children: const <Widget>[
+          Text(
             "Upcoming Events:",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(10),
           ),
-          StreamBuilder(
-            stream: db.collection("events").snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.hasError) {
-                return const Text("Something went wrong");
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text(
-                  "Loading",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                );
-              }
-
-              return ListView(
-                shrinkWrap: true,
-                children: snapshot.data!.docs.map(
-                  (DocumentSnapshot document) {
-                    Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
-                    return SingleEvent(
-                      event: Event(
-                        name: data["name"],
-                        date: data["date"],
-                        time: data["time"],
-                      ),
-                    );
-                  },
-                ).toList(),
-              );
-            },
+          PastAndFutureEvents(isFuture: true),
+          Padding(
+            padding: EdgeInsets.all(10),
           ),
+          Text(
+            "Past Events:",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
+          PastAndFutureEvents(isFuture: false)
         ],
       ),
-      floatingActionButton:
-          email == "rohit.karthik@outlook.com" ? AddEvent() : null,
+      floatingActionButton: emailType == "admin" ? const AddEvent() : null,
     );
   }
 }
