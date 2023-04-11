@@ -132,7 +132,7 @@ class MyHomePage extends StatelessWidget {
                   },
                 ),
                 SinglePage(
-                  name: "News",
+                  name: "Club News",
                   icon: Icons.newspaper,
                   builder: () {
                     Navigator.push(
