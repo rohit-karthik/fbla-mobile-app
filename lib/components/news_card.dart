@@ -1,7 +1,12 @@
+import 'package:fbla_app_22/pages/detailed_news_page.dart';
 import "package:flutter/material.dart";
 
 class NewsCard extends StatefulWidget {
-  const NewsCard({Key? key}) : super(key: key);
+  final String title;
+  final String image;
+
+  const NewsCard({Key? key, required this.title, required this.image})
+      : super(key: key);
 
   @override
   State<NewsCard> createState() => _NewsCardState();
@@ -34,12 +39,23 @@ class _NewsCardState extends State<NewsCard> {
                   maxWidth: double.infinity,
                 ),
                 child: Image.network(
-                  "https://www.fbla-pbl.org/media/2022/05/FBLA_VerticalLogo-1024x792.png",
+                  widget.image,
                 ),
               ),
             ),
+            const Padding(padding: EdgeInsets.all(10)),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailedNews(
+                      image: widget.image,
+                      title: widget.title,
+                    ),
+                  ),
+                );
+              },
               style: ButtonStyle(
                 alignment: Alignment.centerLeft,
                 padding: MaterialStateProperty.all(
@@ -52,7 +68,7 @@ class _NewsCardState extends State<NewsCard> {
                 ),
               ),
               child: Text(
-                "FBLA Announces New Logo and Font Design",
+                widget.title,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 20,
