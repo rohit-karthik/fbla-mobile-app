@@ -74,47 +74,50 @@ class SingleEvent extends StatelessWidget {
                       primary: Theme.of(context).primaryColor,
                     ),
                   ),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.all(0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Theme(
-                              data: ThemeData(
-                                colorScheme: ColorScheme.light(
-                                  primary:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                              ),
-                              child: AlertDialog(
-                                title: Text(event!.name),
-                                content: event!.desc != null &&
-                                        event!.desc != ""
-                                    ? Text(event!.desc!)
-                                    : const Text("No description available."),
-                                actions: [
-                                  TextButton(
-                                    child: const Text(
-                                      "CLOSE",
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 150,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Theme(
+                                data: ThemeData(
+                                  colorScheme: ColorScheme.light(
+                                    primary:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    child: Text(
-                      event!.name,
-                      style: const TextStyle(
-                        fontSize: 20,
+                                ),
+                                child: AlertDialog(
+                                  title: Text(event!.name),
+                                  content: event!.desc != null &&
+                                          event!.desc != ""
+                                      ? Text(event!.desc!)
+                                      : const Text("No description available."),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text(
+                                        "CLOSE",
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      child: Text(
+                        event!.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ),
