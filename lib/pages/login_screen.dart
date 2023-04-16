@@ -1,3 +1,4 @@
+import 'package:fbla_app_22/pages/licensing_page.dart';
 import "package:flutter/material.dart";
 import "package:bcrypt/bcrypt.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -126,13 +127,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: const Text('Log In / Sign Up'),
                 onPressed: () async {
-                  if (_passwordController.text == "") {
-                    setState(() {
-                      _errorMsg = "Please enter a password";
-                    });
-                  } else if (!isValidEmail(_emailController.text)) {
+                  if (!isValidEmail(_emailController.text)) {
                     setState(() {
                       _errorMsg = "Please enter a valid email";
+                    });
+                  } else if (_passwordController.text == "") {
+                    setState(() {
+                      _errorMsg = "Please enter a password";
                     });
                   } else if (_passwordController.text == "password") {
                     setState(() {
@@ -200,12 +201,19 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LicensingPage(),
+                  ),
+                );
+              },
               style: TextButton.styleFrom(
                 primary: Theme.of(context).primaryColor,
               ),
               child: Text(
-                'Forgot Password?',
+                'Terms of Use',
                 style: TextStyle(color: Colors.grey[600]),
               ),
             ),

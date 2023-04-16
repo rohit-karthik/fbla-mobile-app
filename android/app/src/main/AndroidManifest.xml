@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.fbla_app_22">
    <application
-        android:label="fbla_app_22"
+        android:label="SchoolSync"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
