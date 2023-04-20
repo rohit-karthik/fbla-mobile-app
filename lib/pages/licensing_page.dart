@@ -9,6 +9,10 @@ class LicensingPage extends StatefulWidget {
 
 class _LicensingPageState extends State<LicensingPage> {
   @override
+  // This function returns a screen with a title "Licensing and Terms of Use" along with the
+  // MIT license text displayed as the body of the screen.
+  // The text is formatted with a certain font size and is displayed inside a `Padding` widget and a
+  // `ListView` widget. The app bar of the screen has a background color that matches the primary color of the current theme.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

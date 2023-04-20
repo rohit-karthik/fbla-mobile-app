@@ -14,7 +14,16 @@ class _CalendarPageState extends State<CalendarPage> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
+  // This is the build method of a widget in Flutter, which returns a tree of widgets that represents the content of the widget.
+  // It takes a BuildContext as an argument, which provides information about the position of the widget in the widget tree.
+  // This is a method that builds a user interface for a Flutter application using the given context.
+  // It is the main method for constructing the visual appearance of the application and typically returns a MaterialApp, Scaffold, or other UI widgets.
   Widget build(BuildContext context) {
+    // This function retrieves data from a Firebase collection named "calendar" and adds it to a provided calendar.
+    // The function checks if the email matches with the email stored in the collection and only adds events with matching emails.
+    // The data added includes the date, start time, end time, and title with a "<personal>" tag appended to it.
+    // This function retrieves events from a collection in a database and filters them based on the email provided.
+    // The filtered events are added to a calendar as events with start and end times and a title.
     void addEvents() {
       db.collection("calendar").get().then(
             (value) => {
@@ -54,6 +63,14 @@ class _CalendarPageState extends State<CalendarPage> {
 
     addEvents();
 
+    // This code fetches events data from the events collection in the database, creates corresponding `CalendarEventData`
+    // objects from this data and adds them to the calendar controller for display in the app.
+    // The start and end times of these events are obtained from the database and formatted into date and
+    // time objects using the DateTime class. Finally, the `title` property of the created `CalendarEventData`
+    // objects is set to the event name concatenated with `<<global>>`.
+    // This function retrieves events from a Firestore collection and adds them to a calendar view using
+    // the Flutter framework. It converts the date and time values in each document to DateTime objects and
+    // uses them to create CalendarEventData objects that are then added to the calendar controller.
     void addMainEvents() {
       db.collection("events").get().then(
             (value) => {

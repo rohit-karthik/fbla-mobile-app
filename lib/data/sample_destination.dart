@@ -1,3 +1,5 @@
+// These are the different coordinates for the bus routes.
+
 const route1 = [
   [-122.038315, 47.648374],
   [-122.038661, 47.648371],

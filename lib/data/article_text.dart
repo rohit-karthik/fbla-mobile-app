@@ -1,3 +1,5 @@
+// This is the text for the articles in the news page.
+
 Map<String, String> articles = {
   "FBLA Relocates Headquarters to Reston, Virginia":
       """Reston, Virginia, Oct. 19, 2022 (GLOBE NEWSWIRE) -- Future Business Leaders of America, Inc. (FBLA), the nation’s largest business Career and Technical Student Organization, announced today that it has sold its headquarters building at 1912 Association Drive and is relocating in Reston, Virginia.

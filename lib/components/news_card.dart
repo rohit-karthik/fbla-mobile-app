@@ -14,6 +14,11 @@ class NewsCard extends StatefulWidget {
 
 class _NewsCardState extends State<NewsCard> {
   @override
+  // This function builds a container that contains an image, a title, and a button.
+  // The container has a white background color, with a shadow effect, and rounded corners.
+  // The image is constrained to a maximum height and maximum width.
+  // The button has an overlay color that changes its transparency when clicked.
+  // When the button is clicked, it navigates to another screen passing an image and a title as arguments.
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(

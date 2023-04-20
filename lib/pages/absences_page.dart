@@ -18,6 +18,8 @@ class _AbsencesPageState extends State<AbsencesPage> {
 
   String dropdownValue = students.first;
 
+  // This function takes in a nullable DateTime object and converts it to a string.
+  // If the input date is null, it returns an empty string.
   String convertDateToString(DateTime? date) {
     if (date == null) {
       return "";
@@ -41,6 +43,9 @@ class _AbsencesPageState extends State<AbsencesPage> {
     return "$filler1$month-$filler2$day-$year";
   }
 
+  // This function returns the date of the next weekday (Monday to Friday) from today's date.
+  // If today is Saturday, it returns the date for Monday (two days from today), and if today is Sunday,
+  // it returns the date for Monday (one day from today).
   DateTime getNextWeekday() {
     if (DateTime.now().weekday == DateTime.saturday) {
       return DateTime.now().add(const Duration(days: 2));
@@ -51,6 +56,10 @@ class _AbsencesPageState extends State<AbsencesPage> {
   }
 
   @override
+  // This is a basic framework for a Flutter widget build method in which the developer w
+  // would need to define and implement the UI components and layout within the context of the app.
+  // The context is a reference to the current state of the app and is used to retrieve resources and navigate
+  // to other parts of the app.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

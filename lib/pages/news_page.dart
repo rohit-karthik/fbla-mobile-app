@@ -10,6 +10,10 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
   @override
+  // This function builds a screen that displays Club News using a Scaffold widget for the overall structure.
+  // It has an AppBar with a title "Club News".
+  // The body of the screen is a ListView with three NewsCard widgets containing news titles and images.
+  // The text and images are hardcoded into the widget.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -21,18 +21,21 @@ class _PhotosPageState extends State<PhotosPage> {
 
   String textToShow = "Awaiting photos...";
 
+  // This function likely images to a project to the database
   void addImages() {
     _imagesList.removeRange(0, _imagesList.length);
 
     db.collection("photos").get().then(
       (value) {
         for (var doc in value.docs) {
+          // This function adds a new element (a download URL) to the `_imagesList` list using the `.add()` method, and updates the state of the application using `setState()`.
           setState(() {
             _imagesList.add(doc["downloadUrl"]);
           });
         }
 
         if (_imagesList.isNotEmpty) {
+          // This function updates the state of the textToShow variable to the value "No photos shared yet!" using the setState method, which triggers a new build of the user interface with the updated value.
           setState(() {
             textToShow = "No photos shared yet!";
           });
@@ -47,6 +50,7 @@ class _PhotosPageState extends State<PhotosPage> {
     super.initState();
   }
 
+  // This function uploads an image to the Firebase Storage bucket and adds a reference to the image to the database.
   void showPhotoDialog() {
     showDialog(
       context: context,
@@ -69,9 +73,9 @@ class _PhotosPageState extends State<PhotosPage> {
                       title: const Text('Camera'),
                       leading: Radio<PhotoChoice>(
                         fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.green[900]!),
+                            (states) => const Color(0xFF183153)),
                         focusColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.green[900]!),
+                            (states) => const Color(0xFF183153)),
                         value: PhotoChoice.camera,
                         groupValue: choice,
                         onChanged: (PhotoChoice? value) {
@@ -85,9 +89,9 @@ class _PhotosPageState extends State<PhotosPage> {
                       title: const Text('Gallery'),
                       leading: Radio<PhotoChoice>(
                         fillColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.green[900]!),
+                            (states) => const Color(0xFF183153)),
                         focusColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.green[900]!),
+                            (states) => const Color(0xFF183153)),
                         value: PhotoChoice.gallery,
                         groupValue: choice,
                         onChanged: (PhotoChoice? value) {
@@ -125,6 +129,7 @@ class _PhotosPageState extends State<PhotosPage> {
     );
   }
 
+  // This function grabs a photo from the phone gallery and uploads it to Firebase storage.
   _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -152,6 +157,7 @@ class _PhotosPageState extends State<PhotosPage> {
     }
   }
 
+  // This function snaps a picture from the camera and uploads it to Firebase storage.
   _getFromCamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
@@ -179,6 +185,7 @@ class _PhotosPageState extends State<PhotosPage> {
     }
   }
 
+  // This function displays all the photos the school community has uploaded.
   @override
   Widget build(BuildContext context) {
     if (_imagesList.isNotEmpty) {

@@ -7,6 +7,9 @@ import "package:fbla_app_22/data/sample_destination.dart";
 class MapsPage extends StatelessWidget {
   const MapsPage({Key? key}) : super(key: key);
 
+  // This function creates a marker in the form of a red location dot icon with a size of 35
+  // at the specified latitude and longitude coordinates (x and y).
+  // The marker is anchored to the top of the map.
   Marker markerIcon(double x, double y) {
     return Marker(
       anchorPos: AnchorPos.align(AnchorAlign.top),
@@ -19,6 +22,9 @@ class MapsPage extends StatelessWidget {
     );
   }
 
+  // This function returns a marker on a map with the specified text and at the given coordinates.
+  // The marker is a row that contains the specified text with a red and bold font.
+  // The marker is also anchored at a specific position on the screen.
   Marker markerText(String text, double x, double y) {
     return Marker(
       anchorPos: AnchorPos.exactly(Anchor(200, 0)),
@@ -39,6 +45,13 @@ class MapsPage extends StatelessWidget {
   }
 
   @override
+  // The function returns a Scaffold that contains a FlutterMap widget.
+  // The FlutterMap widget displays a map with bus routes marked using polylines,
+  // and bus stops marked using markers with text. The map is from OpenStreetMap a
+  // and the bus routes are defined using LatLng points.
+  // The polylines have different colors and widths according to the routes they represent.
+  // The function also sets the options for the map, including the TileLayerOptions and PolylineLayerOptions.
+  // Finally, the function sets the app bar to display the title "Bus Routes".
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -11,6 +11,8 @@ class AddEvent extends StatefulWidget {
 class _AddEventState extends State<AddEvent> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  // This function takes a nullable DateTime object as an argument and checks if it is null.
+  // If so, it returns an empty string.
   String convertDateToString(DateTime? date) {
     if (date == null) {
       return "";
@@ -34,6 +36,8 @@ class _AddEventState extends State<AddEvent> {
     return "$filler1$month/$filler2$day/$year";
   }
 
+  // This function takes a nullable TimeOfDay object as input and converts it to a string representation.
+  // If the input is null, an empty string is returned.
   String convertTimeToString(TimeOfDay? time) {
     if (time == null) {
       return "";
@@ -56,6 +60,8 @@ class _AddEventState extends State<AddEvent> {
   }
 
   @override
+  // This snippet of code is a method that returns a widget and takes the context of the current build
+  // as a parameter. This method is called when the state of the widget is changed.
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () async {

@@ -20,6 +20,9 @@ class _PastAndFutureEventsState extends State<PastAndFutureEvents> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
+  // This function uses a stream builder to listen for changes in the 'events' collection in a Firestore database.
+  // The collection is then ordered by 'date' in descending order and the resulting snapshots are passed on to the builder.
+  // If there is an error in obtaining the snapshots, the function returns a text notification indicating that something went wrong.
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream:

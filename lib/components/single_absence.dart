@@ -9,6 +9,11 @@ class SingleAbsence extends StatefulWidget {
   final String studentEmail;
   final bool editable;
 
+  // This code defines a widget named "SingleAbsence".
+  // It takes in some required parameters like "absence", "student", "studentEmail", and "editable"
+  // and a key parameter.
+  // The widget extends a base class and overrides its createState method returning an instance of
+  // "_SingleAbsenceState".
   const SingleAbsence(
       {Key? key,
       required this.absence,
@@ -24,10 +29,15 @@ class SingleAbsence extends StatefulWidget {
 class _SingleAbsenceState extends State<SingleAbsence> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  // This function returns a Color object with a specific value of red (0xFFE53935)
+  // based on the absenceType parameter passed to it.
   Color getColor(String absenceType) {
     return const Color(0xFFE53935);
   }
 
+  // This function returns a custom tinted color object of type `Color`.
+  // The returned color object has a fixed RGBA value of (255, 251, 221, 221),
+  // which results in a light pink color.
   Color getTintedColor(String absenceType) {
     return const Color.fromARGB(255, 251, 221, 221);
   }

@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
+  // This function builds a widget that provides a calendar controller and a material app containing a
+  // login page that applies a specific color scheme and a title.
   Widget build(BuildContext context) {
     return CalendarControllerProvider(
       controller: EventController(),
@@ -38,9 +40,9 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch(
-            accentColor: Colors.green.shade900,
+            accentColor: const Color(0xFF183153),
           ),
-          primaryColor: Colors.blue.shade900,
+          primaryColor: const Color(0xFF632170),
         ),
         home: const LoginPage(),
       ),
@@ -52,12 +54,14 @@ class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
+  // This function returns a scaffold containing a ListView widget with an image and a grid view of clickable icons for different pages.
+  // It also includes clickable social media icons which, when pressed, lead to respective web URLs.
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
         children: [
           Image.asset(
-            "assets/tstem.jpg",
+            "assets/banner.jpeg",
           ),
           const Padding(padding: EdgeInsets.all(10)),
           Padding(
@@ -243,7 +247,29 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).primaryColor,
+                  ),
+                  shape: MaterialStateProperty.all(
+                    const StadiumBorder(),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("Log Out"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

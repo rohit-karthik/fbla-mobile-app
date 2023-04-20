@@ -13,6 +13,10 @@ class SinglePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  // This function builds a column that contains an ElevatedButton with an icon and a name text below it.
+  // The ElevatedButton has a custom style that includes a background color, minimum size, and a stadium border.
+  // The onPressed event of the ElevatedButton is determined by the 'builder' function.
+  // The whole widget is built using the provided BuildContext.
   Widget build(BuildContext context) {
     return Column(
       children: [

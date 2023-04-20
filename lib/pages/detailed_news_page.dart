@@ -14,6 +14,9 @@ class DetailedNews extends StatefulWidget {
 
 class _DetailedNewsState extends State<DetailedNews> {
   @override
+  // This function builds a widget that displays an app bar with a title and a background color that matches the primary color of the theme.
+  // The body of the widget is a centered ListView that displays an image, a title, and an article that corresponds to the title.
+  // The article is retrieved from a map using the title as a key.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

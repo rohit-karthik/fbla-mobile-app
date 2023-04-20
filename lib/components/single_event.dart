@@ -25,6 +25,8 @@ class SingleEvent extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  // This code snippet shows the definition of a function named "build" which takes a single parameter of the type "BuildContext".
+  // This function returns a widget to be displayed on the screen.
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -34,7 +36,7 @@ class SingleEvent extends StatelessWidget {
               width: 75,
               height: 75,
               decoration: BoxDecoration(
-                color: Colors.green.shade900,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Column(
@@ -61,6 +63,7 @@ class SingleEvent extends StatelessWidget {
                 ],
               ),
             ),
+            // The `Padding` function applies padding around its child widget to create spacing between the child and its parent widget. The amount and direction of the padding can be specified using the various parameters of the `Padding` function.
             const Padding(
               padding: EdgeInsets.all(10),
             ),
@@ -122,6 +125,7 @@ class SingleEvent extends StatelessWidget {
                     ),
                   ),
                 ),
+                // The `Padding` function adds specified padding around a widget.
                 const Padding(
                   padding: EdgeInsets.all(2.5),
                 ),

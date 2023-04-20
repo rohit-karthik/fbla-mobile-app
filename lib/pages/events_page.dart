@@ -14,6 +14,8 @@ class EventsPage extends StatefulWidget {
 class _EventsPageState extends State<EventsPage> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+  // This function takes a nullable DateTime object as input and returns an empty string if the input is null,
+  // indicating that no date value was provided.
   String convertDateToString(DateTime? date) {
     if (date == null) {
       return "";
@@ -37,6 +39,8 @@ class _EventsPageState extends State<EventsPage> {
     return "$filler1$month/$filler2$day/$year";
   }
 
+  // This function takes in a nullable `TimeOfDay` object as an argument, checks if the passed `time` is
+  // `null`, and if so, returns an empty string.
   String convertTimeToString(TimeOfDay? time) {
     if (time == null) {
       return "";
@@ -59,6 +63,10 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   @override
+  // This is a widget function that builds a page containing a list of events.
+  // It includes an app bar with a title, a body section with a list of upcoming and past events,
+  // and an optional floating action button (depending on the value of emailType) that allows adding new events.
+  // The style and formatting of the events list are defined by a child widget called PastAndFutureEvents.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

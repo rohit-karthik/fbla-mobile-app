@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:bcrypt/bcrypt.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:fbla_app_22/global_vars.dart" as globals;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 
@@ -20,6 +21,10 @@ class _LoginPageState extends State<LoginPage> {
 
   var _errorMsg = "";
 
+  // This function checks if the given email address is valid or not by using a regular expression pattern.
+  // The email is trimmed before checking if it matches the pattern.
+  // The pattern ensures that the email has certain characters before and after the '@' symbol,
+  // and also checks for a valid domain name. The function returns true if the email is valid, otherwise false.
   bool isValidEmail(String email) {
     final pattern = RegExp(
         r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
@@ -27,6 +32,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  // This is a function typically used in a Flutter application that builds the user interface of a
+  // screen or widget. It takes in a BuildContext object as a parameter, allowing access to the
+  // inherited properties of the widget tree. The specifics of what this function does will vary based
+  // on the code inside of it.
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -110,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: const TextStyle(color: Colors.red),
                 ),
               ),
+            // It creates a widget that adds padding around its child widget.
             const Padding(
               padding: EdgeInsets.all(10),
             ),
@@ -127,6 +137,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: const Text('Log In / Sign Up'),
                 onPressed: () async {
+                  // This function is called when the button is pressed.
+                  // It checks if the email and password fields are empty, and if so, displays an error message.
+                  // If the email is not valid, it displays an error message.
+                  // If the password is not valid, it displays an error message.
+                  // If the email and password are valid, it checks if the email is already in the database.
+                  // If the email is not in the database, it adds the email and password to the database.
+                  // If the email is in the database, it checks if the password matches the password in the database.
+                  // If the password matches, it logs the user in.
+                  // If the password does not match, it displays an error message.
                   if (!isValidEmail(_emailController.text)) {
                     setState(() {
                       _errorMsg = "Please enter a valid email";
@@ -202,6 +221,27 @@ class _LoginPageState extends State<LoginPage> {
             ),
             TextButton(
               onPressed: () {
+                String email = "info.schoolsync@gmail.com";
+                String subject = "I found a bug!";
+                String body =
+                    "I found a bug in the app. Here's what happened: <add your description here>.";
+                launchUrl(
+                    Uri.parse("mailto:$email?subject=$subject&body=$body"));
+              },
+              style: TextButton.styleFrom(
+                primary: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                'Report a Bug',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -214,7 +254,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: Text(
                 'Terms of Use',
-                style: TextStyle(color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[600],
+                ),
               ),
             ),
           ],
