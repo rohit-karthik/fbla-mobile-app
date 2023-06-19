@@ -1,18 +1,41 @@
 import 'package:fbla_app_22/pages/detailed_news_page.dart';
 import "package:flutter/material.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 
 class NewsCard extends StatefulWidget {
   final String title;
   final String image;
+  final String docName;
 
-  const NewsCard({Key? key, required this.title, required this.image})
-      : super(key: key);
+  const NewsCard({
+    Key? key,
+    required this.title,
+    required this.image,
+    required this.docName,
+  }) : super(key: key);
 
   @override
   State<NewsCard> createState() => _NewsCardState();
 }
 
 class _NewsCardState extends State<NewsCard> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  int views = 0;
+  // Retrieve views
+  void getViews() async {
+    var doc = await db.collection("news").doc(widget.docName).get();
+    setState(() {
+      views = doc.data()!["views"];
+    });
+  }
+
+  @override
+  void initState() {
+    getViews();
+    super.initState();
+  }
+
   @override
   // This function builds a container that contains an image, a title, and a button.
   // The container has a white background color, with a shadow effect, and rounded corners.
@@ -51,12 +74,19 @@ class _NewsCardState extends State<NewsCard> {
             const Padding(padding: EdgeInsets.all(10)),
             TextButton(
               onPressed: () {
+                db.collection("news").doc(widget.docName).update({
+                  "views": views + 1,
+                });
+                setState(() {
+                  views++;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DetailedNews(
                       image: widget.image,
                       title: widget.title,
+                      views: views,
                     ),
                   ),
                 );
@@ -79,6 +109,14 @@ class _NewsCardState extends State<NewsCard> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+            ),
+            const Padding(padding: EdgeInsets.all(5)),
+            Text(
+              "Views: $views",
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

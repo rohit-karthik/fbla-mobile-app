@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:fbla_app_22/classes/photo_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fbla_app_22/global_vars.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
 import "package:photo_view/photo_view.dart";
-import "package:responsive_grid_list/responsive_grid_list.dart";
 import "package:image_picker/image_picker.dart";
 
 class PhotosPage extends StatefulWidget {
@@ -18,20 +18,37 @@ class _PhotosPageState extends State<PhotosPage> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
   final List<String> _imagesList = <String>[];
+  final List<Map<String, String>> _toApprove = <Map<String, String>>[];
 
   String textToShow = "Awaiting photos...";
 
   // This function likely images to a project to the database
   void addImages() {
     _imagesList.removeRange(0, _imagesList.length);
+    _toApprove.removeRange(0, _toApprove.length);
 
     db.collection("photos").get().then(
       (value) {
         for (var doc in value.docs) {
           // This function adds a new element (a download URL) to the `_imagesList` list using the `.add()` method, and updates the state of the application using `setState()`.
-          setState(() {
-            _imagesList.add(doc["downloadUrl"]);
-          });
+          if (emailType == "admin") {
+            if (!doc["approved"]) {
+              Map<String, String> toAdd = {
+                "downloadUrl": doc["downloadUrl"],
+                "id": doc.id,
+              };
+
+              _toApprove.add(toAdd);
+            } else {
+              setState(() {
+                _imagesList.add(doc["downloadUrl"]);
+              });
+            }
+          } else if (doc["approved"]) {
+            setState(() {
+              _imagesList.add(doc["downloadUrl"]);
+            });
+          }
         }
 
         if (_imagesList.isNotEmpty) {
@@ -116,10 +133,12 @@ class _PhotosPageState extends State<PhotosPage> {
                 child: const Text('OK'),
                 onPressed: () async {
                   if (choice == PhotoChoice.gallery) {
-                    _getFromGallery();
+                    await _getFromGallery();
                   } else {
-                    _getFromCamera();
+                    await _getFromCamera();
                   }
+                  if (!mounted) return;
+                  Navigator.pop(context);
                 },
               ),
             ],
@@ -135,6 +154,12 @@ class _PhotosPageState extends State<PhotosPage> {
       source: ImageSource.gallery,
     );
 
+    bool approved = false;
+
+    if (emailType == "admin") {
+      approved = true;
+    }
+
     try {
       storage
           .ref("photos/${pickedFile!.name}")
@@ -147,9 +172,12 @@ class _PhotosPageState extends State<PhotosPage> {
             (value) {
               db.collection("photos").add({
                 "downloadUrl": value,
+                "approved": approved,
               });
             },
           );
+          addImages();
+          setState(() {});
         },
       );
     } catch (e) {
@@ -159,11 +187,19 @@ class _PhotosPageState extends State<PhotosPage> {
 
   // This function snaps a picture from the camera and uploads it to Firebase storage.
   _getFromCamera() async {
+    // Pick a photo from the camera
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.camera,
     );
 
+    bool approved = false;
+
+    if (emailType == "admin") {
+      approved = true;
+    }
+
     try {
+      // Add the photo to the storage
       storage
           .ref("photos/${pickedFile!.name}")
           .putFile(
@@ -171,13 +207,18 @@ class _PhotosPageState extends State<PhotosPage> {
           )
           .then(
         (res) {
+          // Then add it to the database for a
+          // reference
           res.ref.getDownloadURL().then(
             (value) {
               db.collection("photos").add({
                 "downloadUrl": value,
+                "approved": approved,
               });
             },
           );
+          addImages();
+          setState(() {});
         },
       );
     } catch (e) {
@@ -202,7 +243,7 @@ class _PhotosPageState extends State<PhotosPage> {
             ),
           ],
         ),
-        body: Column(
+        body: ListView(
           children: [
             const Padding(
               padding: EdgeInsets.all(10),
@@ -217,11 +258,82 @@ class _PhotosPageState extends State<PhotosPage> {
                 ),
               ),
             ),
-            Expanded(
-              child: ResponsiveGridList(
-                minItemWidth: MediaQuery.of(context).size.width / 3,
+            // Show text highlighting approved images if admin
+            if (emailType == "admin")
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "Approved images:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              mainAxisSpacing: 20.0,
+              children: [
+                for (String image in _imagesList)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            child: Stack(
+                              children: [
+                                PhotoView(
+                                  imageProvider: NetworkImage(image),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  color: Colors.white,
+                                  icon: const Icon(Icons.close),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Image.network(
+                        image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            if (emailType == "admin")
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "To approve:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            if (emailType == "admin")
+              GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                mainAxisSpacing: 20.0,
                 children: [
-                  for (String image in _imagesList)
+                  for (Map image in _toApprove)
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: GestureDetector(
@@ -232,7 +344,8 @@ class _PhotosPageState extends State<PhotosPage> {
                               child: Stack(
                                 children: [
                                   PhotoView(
-                                    imageProvider: NetworkImage(image),
+                                    imageProvider:
+                                        NetworkImage(image["downloadUrl"]),
                                   ),
                                   IconButton(
                                     onPressed: () {
@@ -241,19 +354,89 @@ class _PhotosPageState extends State<PhotosPage> {
                                     color: Colors.white,
                                     icon: const Icon(Icons.close),
                                   ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(25.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              db
+                                                  .collection("photos")
+                                                  .doc(image["id"])
+                                                  .update(
+                                                {
+                                                  "approved": true,
+                                                },
+                                              );
+
+                                              Navigator.pop(context);
+
+                                              addImages();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.green.shade900,
+                                            ),
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.check),
+                                                Text("Approve"),
+                                              ],
+                                            ),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              // Delete the image from firebase
+                                              storage
+                                                  .refFromURL(
+                                                      image["downloadUrl"])
+                                                  .delete();
+
+                                              // Also delete from db
+                                              db
+                                                  .collection("photos")
+                                                  .doc(image["id"])
+                                                  .delete();
+
+                                              Navigator.pop(context);
+
+                                              addImages();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.red.shade900,
+                                            ),
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.close),
+                                                Text("Reject"),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
                           );
                         },
                         child: Image.network(
-                          image,
+                          image["downloadUrl"],
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                 ],
               ),
+            // Padding
+            const SizedBox(
+              height: 50,
             ),
           ],
         ),

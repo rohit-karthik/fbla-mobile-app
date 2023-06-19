@@ -106,6 +106,8 @@ class _SingleAbsenceState extends State<SingleAbsence> {
                               TextButton(
                                 child: const Text('CONFIRM'),
                                 onPressed: () async {
+                                  // This code will update the absence's date
+                                  // to remove this particular student
                                   db.collection("absences").doc(email).update(
                                     {
                                       widget.absence!.date:
@@ -117,6 +119,8 @@ class _SingleAbsenceState extends State<SingleAbsence> {
                                     },
                                   );
 
+                                  // Remove the absence for the student from the database
+                                  // as well
                                   db
                                       .collection("absences")
                                       .doc(widget.studentEmail)
@@ -126,6 +130,7 @@ class _SingleAbsenceState extends State<SingleAbsence> {
                                     },
                                   );
 
+                                  // Exit the dialog
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                 },

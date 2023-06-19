@@ -217,6 +217,10 @@ class _AbsencesPageState extends State<AbsencesPage> {
                     TextButton(
                       child: const Text('CONFIRM'),
                       onPressed: () async {
+                        // Add the absence to the database
+                        // via the student's email
+                        // and the "absent" description
+                        // To the parent email
                         await db.collection("absences").doc(email).set({
                           convertDateToString(date): FieldValue.arrayUnion([
                             {
@@ -226,6 +230,7 @@ class _AbsencesPageState extends State<AbsencesPage> {
                           ]),
                         }, SetOptions(merge: true));
 
+                        // Add it to the student as well
                         await db
                             .collection("absences")
                             .doc("${dropdownValue.toLowerCase()}@teslastem.com")

@@ -4,9 +4,14 @@ import "package:flutter/material.dart";
 class DetailedNews extends StatefulWidget {
   final String title;
   final String image;
+  final int views;
 
-  const DetailedNews({Key? key, required this.title, required this.image})
-      : super(key: key);
+  const DetailedNews({
+    Key? key,
+    required this.title,
+    required this.image,
+    required this.views,
+  }) : super(key: key);
 
   @override
   State<DetailedNews> createState() => _DetailedNewsState();
@@ -39,6 +44,18 @@ class _DetailedNewsState extends State<DetailedNews> {
                 ),
               ),
               const Padding(padding: EdgeInsets.all(5)),
+              Text(
+                "Views: ${widget.views}",
+                style: const TextStyle(
+                  fontSize: 17.5,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(3.5)),
+              const Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+              const Padding(padding: EdgeInsets.all(3.5)),
               Text(
                 articles[widget.title]!,
                 style: const TextStyle(

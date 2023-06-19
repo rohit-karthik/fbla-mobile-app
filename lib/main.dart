@@ -248,27 +248,54 @@ class MyHomePage extends StatelessWidget {
               ),
             ],
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Theme.of(context).primaryColor,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor,
+                      ),
+                      shape: MaterialStateProperty.all(
+                        const StadiumBorder(),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text("Log Out"),
+                    ),
                   ),
-                  shape: MaterialStateProperty.all(
-                    const StadiumBorder(),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text("Log Out"),
                 ),
               ),
-            ),
+              const Padding(padding: EdgeInsets.all(20)),
+              TextButton(
+                onPressed: () {
+                  String email = "info.schoolsync@gmail.com";
+                  String subject = "I found a bug!";
+                  String body =
+                      "I found a bug in the app. Here's what happened: <add your description here>.";
+                  launchUrl(
+                      Uri.parse("mailto:$email?subject=$subject&body=$body"));
+                },
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                ),
+                child: Text(
+                  'Report a Bug',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

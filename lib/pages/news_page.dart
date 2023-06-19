@@ -1,5 +1,6 @@
 import 'package:fbla_app_22/components/news_card.dart';
 import "package:flutter/material.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -9,6 +10,8 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
   @override
   // This function builds a screen that displays Club News using a Scaffold widget for the overall structure.
   // It has an AppBar with a title "Club News".
@@ -23,34 +26,65 @@ class _NewsPageState extends State<NewsPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
-          children: const [
-            Text(
+          children: [
+            const Text(
               "Club News",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Padding(padding: EdgeInsets.all(5)),
-            NewsCard(
-              image:
-                  "https://www.fbla-pbl.org/media/2022/05/FBLA_VerticalLogo-1024x792.png",
-              title: "FBLA Relocates Headquarters to Reston, Virginia",
+            const Padding(padding: EdgeInsets.all(5)),
+            const Padding(padding: EdgeInsets.all(5)),
+            StreamBuilder(
+              stream: db.collection("news").snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+              ) {
+                List<Widget> widgets = [];
+                if (snapshot.data == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                for (var i in snapshot.data!.docs) {
+                  var docData = i.data();
+                  widgets.add(
+                    NewsCard(
+                      image: docData["image"],
+                      title: docData["title"],
+                      docName: i.id,
+                    ),
+                  );
+                  widgets.add(
+                    const Padding(padding: EdgeInsets.all(5)),
+                  );
+                }
+                return Column(
+                  children: widgets,
+                );
+              },
             ),
-            Padding(padding: EdgeInsets.all(5)),
-            NewsCard(
-              image:
-                  "https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/2837/2020/11/20160555/marysvillegetchell_logo_outline.png",
-              title:
-                  "March Washington FBLA Chapter of the Month - Marysville-Getchell HS",
-            ),
-            Padding(padding: EdgeInsets.all(5)),
-            NewsCard(
-              image:
-                  "https://www.travelandleisure.com/thmb/3NRm4q9Qg2bdUqXvenPBVeIloV4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/atlanta-skyline-TODOATL0122-195afa04632e43f5be27ef2dcc94ca3b.jpg",
-              title: "Start Planning Your Trip to FBLA NLC in Atlanta!",
-            ),
-            Padding(padding: EdgeInsets.all(5)),
+            // NewsCard(
+            //   image:
+            //       "https://www.fbla-pbl.org/media/2022/05/FBLA_VerticalLogo-1024x792.png",
+            //   title: "FBLA Relocates Headquarters to Reston, Virginia",
+            // ),
+            // Padding(padding: EdgeInsets.all(5)),
+            // NewsCard(
+            //   image:
+            //       "https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/2837/2020/11/20160555/marysvillegetchell_logo_outline.png",
+            //   title:
+            //       "March Washington FBLA Chapter of the Month - Marysville-Getchell HS",
+            // ),
+            // Padding(padding: EdgeInsets.all(5)),
+            // NewsCard(
+            //   image:
+            //       "https://www.travelandleisure.com/thmb/3NRm4q9Qg2bdUqXvenPBVeIloV4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/atlanta-skyline-TODOATL0122-195afa04632e43f5be27ef2dcc94ca3b.jpg",
+            //   title: "Start Planning Your Trip to FBLA NLC in Atlanta!",
+            // Padding(padding: EdgeInsets.all(5)),
+            // ),
           ],
         ),
       ),

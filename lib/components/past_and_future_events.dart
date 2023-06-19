@@ -27,8 +27,10 @@ class _PastAndFutureEventsState extends State<PastAndFutureEvents> {
     return StreamBuilder(
       stream:
           db.collection("events").orderBy("date", descending: true).snapshots(),
-      builder: (BuildContext context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+      ) {
         if (snapshot.hasError) {
           return const Text("Something went wrong");
         }

@@ -146,14 +146,17 @@ class _AddEventState extends State<AddEvent> {
                       TextButton(
                         child: const Text('OK'),
                         onPressed: () async {
+                          // Throw an error if the user does not enter a name for the event.
                           if (textFieldController.text.isEmpty) {
                             setState(() {
                               errorText = "Please enter a name for the event.";
                             });
                           } else {
+                            // if everything is good
                             setState(() {
                               errorText = "";
                             });
+                            // Add the event to the database.
                             await db.collection("events").add({
                               "name": textFieldController.text,
                               "date": convertDateToString(date),
@@ -161,6 +164,7 @@ class _AddEventState extends State<AddEvent> {
                               "desc": textFieldController2.text,
                             });
 
+                            // Close the dialog.
                             if (!mounted) return;
                             Navigator.pop(context);
                           }

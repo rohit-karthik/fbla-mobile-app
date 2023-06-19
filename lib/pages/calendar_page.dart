@@ -335,15 +335,18 @@ class _CalendarPageState extends State<CalendarPage> {
                     TextButton(
                       child: const Text('OK'),
                       onPressed: () async {
+                        // Throw an error if the user doesn't enter a title
                         if (textFieldController.text.isEmpty) {
                           setState(() {
                             error = true;
                           });
                         } else {
+                          // Otherwise, add the event to the database
                           setState(() {
                             error = false;
                           });
 
+                          // Add the event via this code
                           await db.collection("calendar").add({
                             "title": textFieldController.text,
                             "year": date.year,
@@ -356,6 +359,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             "email": email,
                           });
 
+                          // Exit the dialog
                           if (!mounted) return;
                           Navigator.pop(context);
                         }
