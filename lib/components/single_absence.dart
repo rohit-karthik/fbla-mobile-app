@@ -2,6 +2,7 @@ import 'package:fbla_app_22/global_vars.dart';
 import "package:flutter/material.dart";
 import 'package:fbla_app_22/classes/absence.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class SingleAbsence extends StatefulWidget {
   final Absence? absence;
@@ -75,12 +76,9 @@ class _SingleAbsenceState extends State<SingleAbsence> {
           ),
         ),
         if (widget.editable)
-          (int.parse(widget.absence!.date.substring(6)) >=
-                      DateTime.now().year &&
-                  int.parse(widget.absence!.date.substring(0, 2)) >=
-                      DateTime.now().month &&
-                  int.parse(widget.absence!.date.substring(3, 5)) >=
-                      DateTime.now().day)
+          (DateFormat("MM/dd/yyyy")
+                  .parse(widget.absence!.date.replaceAll("-", "/"))
+                  .isAfter(DateTime.now()))
               ? IconButton(
                   onPressed: () {
                     showDialog(
@@ -93,7 +91,7 @@ class _SingleAbsenceState extends State<SingleAbsence> {
                             ),
                           ),
                           child: AlertDialog(
-                            title: const Text('Confirm your Absence'),
+                            title: const Text('Confirm your Absence Revoke'),
                             content: const Text(
                                 "Are you sure you want to revoke this absence?"),
                             actions: <Widget>[

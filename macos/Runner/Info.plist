@@ -28,5 +28,13 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used to snap a photo to share with the photo share.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The gallery is needed to access your photos so you can upload a photo to the photo share.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is used to determine your distance from specific bus route stops.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is used to determine your distance from specific bus route stops.</string>
 </dict>
 </plist>

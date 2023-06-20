@@ -11,14 +11,6 @@ The new National Service Center, which includes leased office space in Reston To
 As it looks forward, FBLA is also honoring the past of the 1912 Association Drive building, which has housed its headquarters since 1992. The association will preserve legacies that have been a staple of its history in the new location.
 
 FBLA will lease temporary space in Reston Town Center West while its new office space is completed. This process is expected to last six to nine months. Beginning November 1, mail can be sent to FBLA's new permanent address at 12100 Sunset Hills Drive, Suite 200, Reston, VA 20190. FBLA phone numbers will remain the same.""",
-  "March Washington FBLA Chapter of the Month - Marysville-Getchell HS":
-      """Congratulations to MARYSVILLE-GETCHELL HIGH SCHOOL for being WA FBLA's March Chapter of the Month!
-
-Marysville Getchell FBLA Chapter has been committed to its members' success and wellbeing. Recognizing students' struggles with a lack of socialization in the virtual environment, they held numerous socials and game nights to engage their members. To continue their usual strong bond, they included fun icebreakers in their virtual social calls, focusing on members' mental health by creating designated times just to hang out! Marysville Getchell's extraordinary chapter also continued in engaging in a myriad of FBLA's programs! They've completed both Super Sweeps and Non-Stop November this year. Additionally, they've focused on engaging as many members as possible in completing the Chapter Challenges and BAAs. In order to network with other members and prepare for their future careers, Marysville Getchell FBLA even met with another local chapter, a national March of Dimes representative, and several alumni!
-
-This year Marysville Getchell took an innovative approach to their commitment to community service! They completed extensive research to develop a contactless, COVID-safe project to serve their community. The officer team worked to plan a collection drive for their local foster care center, where members and the community could drop off items. Additionally, their chapter members worked together to write thank you notes to their local fire station. Marysville Getchell has shown that their chapter is committed to helping and positively impacting their community.
-
-Marysville Getchell is a chapter brilliantly innovated to overcome the challenges of the virtual environment. They've focused on their members' wellbeing and success throughout the year. WAFBLA is proud to award Marysville Getchell FBLA Chapter of the Month.""",
   "Start Planning Your Trip to FBLA NLC in Atlanta!":
       """One Big Night, One Big Celebration!
 Our Opening Session on June 27 will include the Parade of States, recognition of Adviser Wall of Fame recipients, partner event winners, and chapter awards, our keynote speaker, and National Officer candidate speeches. 

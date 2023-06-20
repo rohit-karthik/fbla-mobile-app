@@ -194,6 +194,8 @@ class _AbsencesPageState extends State<AbsencesPage> {
           );
           if (date == null) return;
 
+          if (!mounted) return;
+
           showDialog(
             context: context,
             builder: (context) {
