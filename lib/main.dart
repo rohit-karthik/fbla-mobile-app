@@ -175,8 +175,11 @@ class MyHomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    launchUrl(Uri.parse(
-                        "https://www.facebook.com/LakeWashingtonSchools"));
+                    launchUrl(
+                      Uri.parse(
+                          "https://www.facebook.com/LakeWashingtonSchools"),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                 ),
               ),
@@ -204,8 +207,11 @@ class MyHomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    launchUrl(Uri.parse(
-                        "https://www.instagram.com/lakewashingtonschools/"));
+                    launchUrl(
+                      Uri.parse(
+                          "https://www.instagram.com/lakewashingtonschools/"),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                 ),
               ),
@@ -223,7 +229,10 @@ class MyHomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    launchUrl(Uri.parse("https://twitter.com/LakeWashSchools"));
+                    launchUrl(
+                      Uri.parse("https://twitter.com/LakeWashSchools"),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                 ),
               ),
@@ -241,8 +250,11 @@ class MyHomePage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    launchUrl(Uri.parse(
-                        "https://www.youtube.com/c/LakeWashingtonSchoolDistrict"));
+                    launchUrl(
+                      Uri.parse(
+                          "https://www.youtube.com/c/LakeWashingtonSchoolDistrict"),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                 ),
               ),

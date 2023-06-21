@@ -1,3 +1,5 @@
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:fbla_app_22/global_vars.dart";
 import "package:flutter/material.dart";
 import "../classes/event.dart";
 
@@ -18,10 +20,12 @@ const Map<int, String> intToMonth = {
 
 class SingleEvent extends StatelessWidget {
   final Event? event;
+  final DocumentSnapshot<Object?> document;
 
   const SingleEvent({
     Key? key,
     required this.event,
+    required this.document,
   }) : super(key: key);
 
   @override
@@ -77,52 +81,112 @@ class SingleEvent extends StatelessWidget {
                       primary: Theme.of(context).primaryColor,
                     ),
                   ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width - 150,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.all(0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return Theme(
-                                data: ThemeData(
-                                  colorScheme: ColorScheme.light(
-                                    primary:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                child: AlertDialog(
-                                  title: Text(event!.name),
-                                  content: event!.desc != null &&
-                                          event!.desc != ""
-                                      ? Text(event!.desc!)
-                                      : const Text("No description available."),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text(
-                                        "CLOSE",
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width - 175,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.all(0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Theme(
+                                    data: ThemeData(
+                                      colorScheme: ColorScheme.light(
+                                        primary: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                       ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
                                     ),
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      child: Text(
-                        event!.name,
-                        style: const TextStyle(
-                          fontSize: 20,
+                                    child: AlertDialog(
+                                      title: Text(event!.name),
+                                      content: event!.desc != null &&
+                                              event!.desc != ""
+                                          ? Text(event!.desc!)
+                                          : const Text(
+                                              "No description available."),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text(
+                                            "CLOSE",
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                          child: Text(
+                            event!.name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      // Removal button if admin
+                      if (emailType == "admin")
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Theme(
+                                    data: ThemeData(
+                                      colorScheme: ColorScheme.light(
+                                        primary: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                      ),
+                                    ),
+                                    child: AlertDialog(
+                                      title: const Text("Delete Event"),
+                                      content: const Text(
+                                          "Are you sure you want to delete this event?"),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text(
+                                            "CANCEL",
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text(
+                                            "DELETE",
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            // delete the event from firebase
+                                            // print(document.data());
+                                            // print(document.id);
+
+                                            FirebaseFirestore.instance
+                                                .collection("events")
+                                                .doc(document.id)
+                                                .delete();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: Colors.red[900],
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 // The `Padding` function adds specified padding around a widget.

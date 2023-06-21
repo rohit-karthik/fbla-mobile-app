@@ -75,6 +75,7 @@ class _EventsPageState extends State<EventsPage> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
+        shrinkWrap: true,
         children: const <Widget>[
           Text(
             "Upcoming Events:",

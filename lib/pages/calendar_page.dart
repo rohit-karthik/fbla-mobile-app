@@ -19,6 +19,10 @@ class _CalendarPageState extends State<CalendarPage> {
   // This is a method that builds a user interface for a Flutter application using the given context.
   // It is the main method for constructing the visual appearance of the application and typically returns a MaterialApp, Scaffold, or other UI widgets.
   Widget build(BuildContext context) {
+    CalendarControllerProvider.of(context)
+        .controller
+        .removeWhere((element) => true);
+
     // This function retrieves data from a Firebase collection named "calendar" and adds it to a provided calendar.
     // The function checks if the email matches with the email stored in the collection and only adds events with matching emails.
     // The data added includes the date, start time, end time, and title with a "<personal>" tag appended to it.

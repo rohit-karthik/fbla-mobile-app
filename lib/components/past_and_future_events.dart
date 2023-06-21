@@ -61,6 +61,7 @@ class _PastAndFutureEventsState extends State<PastAndFutureEvents> {
                     time: data["time"],
                     desc: data["desc"],
                   ),
+                  document: document,
                 );
               } else if (!widget.isFuture &&
                   DateFormat.yMd()
@@ -73,6 +74,7 @@ class _PastAndFutureEventsState extends State<PastAndFutureEvents> {
                     time: data["time"],
                     desc: data["desc"],
                   ),
+                  document: document,
                 );
               } else {
                 return Container();
